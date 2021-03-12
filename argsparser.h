@@ -1,6 +1,7 @@
 #pragma once
 
-class Flags {
+class Flags
+{
     public:
         size_t dice = 0;
         size_t faces = 0;

@@ -1,1 +1,1 @@
-cl /W4 /EHsc betterdice.cpp argsparser.cpp /link /out:roll.exe
+cl /W4 /EHsc betterdice.cpp argsparser.cpp roller.cpp /link /out:roll.exe
