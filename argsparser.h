@@ -10,4 +10,5 @@ class Flags {
 
 };
 
+
 void parse_args(int argc, char const *argv[]);
