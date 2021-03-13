@@ -1,5 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <iterator>
+#include <regex>
+#include <string>
+
 class Flags
 {
     public:
