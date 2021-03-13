@@ -3,15 +3,33 @@
 
 const std::string s_die = "[0-9]*(d)?[0-9]+";
 
-Dice parse_die(const std::string die)
+Dice * parse_die(const std::string die)
 {
-    Dice dice;
+    std::cout << die << std::endl;
+
+    Dice * dice = (Dice*) calloc(1, sizeof(Dice*));
+    if (!dice) exit(ENOMEM);
 
     std::string delim = "d";
 
-    dice.numDice = std::stoi(die.substr(0, die.find(delim)));
-    dice.numFaces = std::stoi(die.substr(die.find(delim)+1, die.length()));
-    dice.bonus = NULL;
+    size_t pos = die.find(delim);
+
+    if (pos != std::string::npos)
+    {
+        if (pos != 0) dice->numDice = std::stoi(die.substr(0, pos));
+        else dice->numDice = 1;
+
+        dice->numFaces = std::stoi(die.substr(pos+1, die.length()));
+    }
+    else
+    {
+        dice->numDice = 0;
+        dice->numFaces = std::stoi(die.substr(0, die.length()));
+    }
+
+    dice-> bonus = NULL;
+
+    std::cout << "endin" << std::endl;
 
     return dice;
 }
@@ -23,19 +41,27 @@ int* parse_dice_roll(const std::string dice)
     auto dice_begin = std::sregex_iterator(dice.begin(), dice.end(), re_die);
     auto dice_end = std::sregex_iterator();
 
-    Dice die;
-    Dice prev;
+    Dice * die = NULL;
+    Dice * temp = NULL;
+    int t = 0;
 
-    // TODO: fix this shit
+    // BUGGED AGAIN
     for (std::sregex_iterator ii = dice_begin; ii != dice_end; ++ii)
     {
         std::smatch match = *ii;
-        Dice cur;
-        cur = parse_die(match.str());
-        if (ii == dice_begin) die = cur;
-        prev.bonus = &cur;
-        prev = cur;
+        Dice * cur = parse_die(match.str());
+        if (!t++) die = cur;
+        else temp->bonus = cur;
+        temp = cur;
     }
+
+    while (die)
+    {
+        std::cout << *die << std::endl;
+        die = die->bonus;
+    }
+
+    Dice::free(die);
 
     return NULL;
 }

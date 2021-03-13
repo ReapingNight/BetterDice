@@ -6,3 +6,15 @@ std::ostream& operator<<(std::ostream& out, const Dice& dice)
 
     return out;
 }
+
+void Dice::free(Dice * die)
+{
+    if (!die) return;
+
+    Dice * temp = die;
+    while (temp)
+    {
+        temp = die->bonus;
+        free(die);
+    }
+}
