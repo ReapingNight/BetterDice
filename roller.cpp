@@ -3,6 +3,7 @@
 std::ostream& operator<<(std::ostream& out, const Dice& dice)
 {
     out << dice.numDice << 'd' << dice.numFaces;
+    // if (dice.btype) out << (dice.btype == PLUS) ? "+" : "-";
 
     return out;
 }
