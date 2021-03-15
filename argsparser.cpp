@@ -1,12 +1,11 @@
 #include "argsparser.h"
-#include "roller.h"
 
 const std::string s_die = "[0-9]*(d)?[0-9]+";
 
-Dice * parse_die(const std::string die)
+Dice* parse_die(const std::string die)
 {
-    Dice * dice = (Dice*) calloc(1, sizeof(Dice*));
-    if (!dice) exit(ENOMEM);
+    int num_d = 0;
+    int num_f = 0;
 
     std::string delim = "d";
 
@@ -14,25 +13,22 @@ Dice * parse_die(const std::string die)
 
     if (pos != std::string::npos)
     {
-        if (pos != 0) dice->numDice = std::stoi(die.substr(0, pos));
-        else dice->numDice = 1;
+        if (pos != 0) num_d = std::stoi(die.substr(0, pos));
+        else num_d = 1;
 
-        dice->numFaces = std::stoi(die.substr(pos+1, die.length()));
+        num_f = std::stoi(die.substr(pos+1, die.length()));
     }
     else
     {
-        dice->numDice = 0;
-        dice->numFaces = std::stoi(die.substr(0, die.length()));
+        num_d = 0;
+        num_f = std::stoi(die);
     }
 
-    dice->bonus = NULL;
-    dice->btype = NONE;
+    Dice * dice = new Dice(num_d, num_f);
 
     return dice;
 }
 
-
-// THIS SHIT BUGGY AF?!?
 int* parse_dice_roll(const std::string dice)
 {
     std::regex re_die(s_die, std::regex_constants::icase);
@@ -45,59 +41,24 @@ int* parse_dice_roll(const std::string dice)
     Dice * die = NULL;
     Dice * temp = NULL;
     int t = 0;
+    size_t jj = 0;
 
     for (std::sregex_iterator ii = dice_begin; ii != dice_end; ++ii)
     {
         std::smatch match = *ii;
-        std::cout << " - " << match.str() << std::endl;
         Dice * cur = parse_die(match.str());
         if (!t++) die = cur;
-        else temp->bonus = cur;
+        else 
+        {
+            DICE_OP type = get_type(ops.at(jj++));
+            temp->add_bonus(cur, type);
+        }
         temp = cur;
     }
 
-    temp = die;
-    while (temp)
-    {
-        std::cout << *die << std::endl;
-        temp = temp->bonus;
-    }
+    std::cout << die->str() << std::endl;
 
-    std::cout << "gonna do stuff" << std::endl;
-
-    temp = die;
-    std::cout << ops.length() << std::endl;
-    for (size_t ii = 0; ii < ops.length(); ++ii)
-    {
-        switch (ops[ii])
-        {
-            case '+':
-                std::cout << "Found a plus" << std::endl;
-                temp->btype = PLUS;
-                break;
-            case '-':
-                std::cout << "Found a minus" << std::endl;
-                temp->btype = MINUS;
-            
-            default:
-                break;
-        }
-
-        temp = temp->bonus;
-    }
-
-    std::cout << "FUCK" << std::endl;
-
-    while (die)
-    {
-        std::cout << *die << std::endl;
-        die = die->bonus;
-    }
-
-    die->free(die);
-    free(die);
-
-    std::cout.flush();
+    delete die;
 
     return NULL;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "dice.h"
+
 #include <iostream>
 #include <iterator>
 #include <regex>
