@@ -29,7 +29,7 @@ Dice* parse_die(const std::string die)
     return dice;
 }
 
-int* parse_dice_roll(const std::string dice)
+std::vector<int> parse_dice_roll(const std::string dice)
 {
     std::regex re_die(s_die, std::regex_constants::icase);
 
@@ -56,11 +56,10 @@ int* parse_dice_roll(const std::string dice)
         temp = cur;
     }
 
-    std::cout << die->str() << std::endl;
-
+    std::vector<int> rolls = roll(die);
     delete die;
 
-    return NULL;
+    return rolls;
 }
 
 void parse_args(int argc, char const *argv[])
@@ -69,13 +68,20 @@ void parse_args(int argc, char const *argv[])
     std::regex re_bonus("^[\\+|-]" + s_die + "$", std::regex_constants::icase);
     std::regex re_dc("^(-)?dc=[0-9]+$", std::regex_constants::icase);
 
+    std::vector<int> rolls;
+
     for ( size_t ii = 0; ii < argc; ++ii)
     {
         if (std::regex_search(argv[ii], re_roll))
-            parse_dice_roll(argv[++ii]);
+            rolls = parse_dice_roll(argv[++ii]);
         else if (std::regex_search(argv[ii], re_bonus))
             parse_dice_roll(argv[ii]);
         else if (std::regex_search(argv[ii], re_dc))
             printf("%s match dc\n", argv[ii]);
     }
+
+    // PRINTIN
+    std::cout << '[';
+    for (size_t ii = 0; ii < rolls.size() - 2; ++ii) std::cout << rolls[ii] << ", ";
+    std::cout << rolls[rolls.size()-2] << "]\t" << rolls.back() << std::endl;
 }
