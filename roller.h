@@ -8,3 +8,4 @@
 #include <numeric>
 
 std::vector<int> roll(Dice* dice);
+int roll_bonus(Dice* dice, DICE_OP op);
