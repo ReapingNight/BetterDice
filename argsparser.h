@@ -2,6 +2,7 @@
 
 #include "dice.h"
 #include "roller.h"
+#include "calculations.h"
 
 #include <iostream>
 #include <iterator>

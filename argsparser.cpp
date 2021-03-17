@@ -82,27 +82,53 @@ void parse_args(int argc, char const *argv[])
     std::vector<int> rolls;
     int bonus = 0;
     size_t dc = 0;
+    int sum = 0;
 
+    // Parse individual arguments
     for ( size_t ii = 0; ii < argc; ++ii)
     {
         if (std::regex_search(argv[ii], re_roll))
+        {
+            // roll
             rolls = parse_dice_roll(argv[++ii]);
+        }
         else if (std::regex_search(argv[ii], re_bonus))
         {
+            // [+|-][n]d[n]
             Dice * die = parse_die(argv[ii]);
             DICE_OP op = PLUS;
             if (argv[ii][0] == '-') op = MINUS;
             bonus += roll_bonus(die, op);
         }
         else if (std::regex_search(argv[ii], re_dc))
+        {
+            // -dc=[n]
             dc = parse_dc(argv[ii]);
+        }
         else std::cout << "Unknown argument: " << argv[ii] << std::endl;
     }
 
+    // Add to hit
+    if (bonus) rolls = apply_to_hit(rolls, bonus);
+
+    // Apply dc
+    if (dc) rolls = filter(rolls, dc);
+    
+    sum = sum_dice(rolls);
+
+    std::cout << rolls.size() << std::endl;
+
     // PRINTIN
     std::cout << '[';
-    for (size_t ii = 0; ii < rolls.size() - 2; ++ii) std::cout << rolls[ii] << ", ";
-    std::cout << rolls[rolls.size()-2] << "]\t" << rolls.back();
-    std::cout << " to hit: " << bonus;
-    std::cout << " dc: " << dc << std::endl;
+    if (rolls.size() > 1)
+    {
+        for (size_t ii = 0; ii < rolls.size() - 2; ++ii) std::cout << rolls[ii] << ", ";
+        std::cout << rolls[rolls.size()-2];
+    }
+    else
+    {
+        std::cout << 0;
+    }
+    std::cout << ']' << std::endl;
+    std::cout << '[' << rolls.size() - 1 << "] - [" << sum << ']' << std::endl;
 }
