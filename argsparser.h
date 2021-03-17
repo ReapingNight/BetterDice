@@ -9,5 +9,6 @@
 #include <string>
 #include <cerrno>
 #include <vector>
+#include <cstring>
 
 void parse_args(int argc, char const *argv[]);

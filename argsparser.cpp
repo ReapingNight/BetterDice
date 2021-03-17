@@ -45,8 +45,7 @@ std::vector<int> parse_dice_roll(const std::string dice)
 
     for (std::sregex_iterator ii = dice_begin; ii != dice_end; ++ii)
     {
-        std::smatch match = *ii;
-        Dice * cur = parse_die(match.str());
+        Dice * cur = parse_die((*ii).str());
         if (!t++) die = cur;
         else 
         {
@@ -62,6 +61,18 @@ std::vector<int> parse_dice_roll(const std::string dice)
     return rolls;
 }
 
+int parse_dc(const std::string dc)
+{
+    std::regex re_num("[0-9]+");
+
+    auto num_begin = std::sregex_iterator(dc.begin(), dc.end(), re_num);
+    std::string s = (*num_begin).str();
+
+    char * num = &s[0];
+
+    return std::atoi(num);
+}
+
 void parse_args(int argc, char const *argv[])
 {
     std::regex re_roll("^roll$");
@@ -70,6 +81,7 @@ void parse_args(int argc, char const *argv[])
 
     std::vector<int> rolls;
     int bonus = 0;
+    size_t dc = 0;
 
     for ( size_t ii = 0; ii < argc; ++ii)
     {
@@ -83,7 +95,7 @@ void parse_args(int argc, char const *argv[])
             bonus += roll_bonus(die, op);
         }
         else if (std::regex_search(argv[ii], re_dc))
-            printf("%s match dc\n", argv[ii]);
+            dc = parse_dc(argv[ii]);
         else std::cout << "Unknown argument: " << argv[ii] << std::endl;
     }
 
@@ -91,5 +103,6 @@ void parse_args(int argc, char const *argv[])
     std::cout << '[';
     for (size_t ii = 0; ii < rolls.size() - 2; ++ii) std::cout << rolls[ii] << ", ";
     std::cout << rolls[rolls.size()-2] << "]\t" << rolls.back();
-    std::cout << " to hit: " << bonus << std::endl;
+    std::cout << " to hit: " << bonus;
+    std::cout << " dc: " << dc << std::endl;
 }
