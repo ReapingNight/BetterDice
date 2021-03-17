@@ -11,5 +11,6 @@
 #include <cerrno>
 #include <vector>
 #include <cstring>
+#include <windows.h>
 
 void parse_args(int argc, char const *argv[]);
