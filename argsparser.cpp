@@ -1,6 +1,7 @@
 #include "argsparser.h"
 
 const std::string s_die = "[0-9]*(d)?[0-9]+";
+int crit = 20;
 
 /**
  * Parse a std::string representation of a singular die into a Dice object
@@ -67,6 +68,7 @@ Dice * parse_dice_roll(const std::string dice)
         temp = cur;
     }
 
+    crit = die->get_faces();
     return die;
 }
 
@@ -150,11 +152,33 @@ void parse_args(int argc, char const *argv[])
     sum = sum_dice(rolls);
 
     // PRINTIN
+    HANDLE h_con = GetStdHandle(STD_OUTPUT_HANDLE);
+
     std::cout << '[';
     if (rolls.size() > 1)
     {
-        for (size_t ii = 0; ii < rolls.size() - 2; ++ii) std::cout << rolls[ii] << ", ";
-        std::cout << rolls[rolls.size()-2];
+        for (size_t ii = 0; ii < rolls.size() - 2; ++ii)
+        {
+            if (rolls.at(ii) - bonus >= crit)
+                SetConsoleTextAttribute(h_con, 10);
+            else if (rolls.at(ii) - bonus <= 1)
+                SetConsoleTextAttribute(h_con, 12);
+            
+            std::cout << rolls.at(ii);
+
+            SetConsoleTextAttribute(h_con, 7);
+
+            std::cout << ", ";
+        }
+
+        if (rolls.at(rolls.size()-2) - bonus == 20)
+            SetConsoleTextAttribute(h_con, 10);
+        else if (rolls.at(rolls.size()-2) - bonus == 1)
+            SetConsoleTextAttribute(h_con, 12);
+            
+        std::cout << rolls.at(rolls.size()-2);
+        
+        SetConsoleTextAttribute(h_con, 7);
     }
     else
     {
