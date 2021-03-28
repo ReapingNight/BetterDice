@@ -6,7 +6,6 @@
 #include <time.h>
 #include <vector>
 #include <numeric>
-#include <algorithm>
 
-std::vector<int> roll(Dice* dice, const int adv = 0);
+std::vector<int> roll(Dice* dice);
 int roll_bonus(Dice* dice, DICE_OP op);
