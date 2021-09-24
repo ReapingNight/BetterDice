@@ -57,7 +57,7 @@ std::vector<int> Die::roll_die(int (*rand)(void), const int adv)
 
     if (adv)
     {
-        roll = std::distance(rolled.begin(),(adv > 0) ? std::max_element(rolled.begin(), rolled.end()) : std::min_element(rolled.begin(), rolled.end()));
+        roll = *((adv > 0) ? std::max_element(rolled.begin(), rolled.end()) : std::min_element(rolled.begin(), rolled.end()));
     }
 
     return rolled;
