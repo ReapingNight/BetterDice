@@ -3,7 +3,8 @@
 Dice::Dice(void)
 {
     this->num_dice = 0;
-    this->num_faces = 0;
+    // this->num_faces = 0;
+    this->die = new Die();
     this->bonus = NULL;
     this->btype = NONE;
 }
@@ -12,12 +13,14 @@ Dice::Dice(int num_dice, int num_faces)
 {
     this->num_dice = num_dice;
     this->num_faces = num_faces;
+    this->die = new Die(num_faces);
     this->bonus = NULL;
     this->btype = NONE;
 }
 
 Dice::~Dice()
 {
+    delete die;
     delete bonus;
 }
 
@@ -47,22 +50,18 @@ int Dice::get_dice()
 {
     return this->num_dice;
 }
-
 int Dice::get_faces()
 {
     return this->num_faces;
 }
-
 Dice* Dice::get_bonus()
 {
     return this->bonus;
 }
-
 DICE_OP Dice::get_type()
 {
     return this->btype;
 }
-
 DICE_OP get_type(const char op)
 {
     DICE_OP res = NONE;

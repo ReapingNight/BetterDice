@@ -17,4 +17,5 @@ class Die
         ~Die();
         std::string str(void);
         std::vector<int> roll_die(int (*rand)(void), const int adv);
+        int get_roll(void);
 };

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "die.h"
+
 enum DICE_OP {NONE, PLUS, MINUS};
 
 class Dice
@@ -9,6 +11,7 @@ class Dice
     private:
         int num_dice;
         int num_faces;
+        Die* die;
         Dice* bonus;
         DICE_OP btype;
     public:

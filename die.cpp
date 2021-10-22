@@ -62,3 +62,8 @@ std::vector<int> Die::roll_die(int (*rand)(void), const int adv)
 
     return rolled;
 }
+
+int Die::get_roll(void)
+{
+    return this->roll;
+}
